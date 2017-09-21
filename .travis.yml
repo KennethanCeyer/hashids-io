@@ -1,12 +1,12 @@
 language: bash
-sudo: false
+sudo: required
 install:
-  - sudo apt-get install libpcre3 libpcre3-dev libevent-dev
+  - apt-get install libpcre3 libpcre3-dev libevent-dev
   - cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl
-  - source ./configure && make && sudo make install
+  - bash ./configure && make && make install
   - cd /tmp && git clone https://github.com/KennethanCeyer/io.git && cd io
   - mkdir build && cd build
-  - sudo cmake .. && make install
+  - cmake .. && make install
 script:
   - io --version
   - bash ./run_tests.sh
