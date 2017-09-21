@@ -1,7 +1,7 @@
 
 [![hashids](http://hashids.org/public/img/hashids.gif "Hashids")](http://hashids.org/)
 
-[![License][license-image]][license-url]
+[![License][license-image]][license-url] [![Build Status](https://travis-ci.org/KennethanCeyer/io-hashids.svg?branch=master)](https://travis-ci.org/KennethanCeyer/io-hashids)
 
 What is io-hashids
 ------------------
