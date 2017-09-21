@@ -2,7 +2,7 @@ sudo: false
 install:
   - sudo apt-get install libpcre3 libpcre3-dev libevent-dev
   - cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl
-  - source ./configure & make & make install
+  - source ./configure && make && make install
   - cd /tmp && git clone https://github.com/KennethanCeyer/io.git && cd io
   - source ./build.sh
 script:
