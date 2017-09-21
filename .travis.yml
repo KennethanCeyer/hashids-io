@@ -5,7 +5,8 @@ install:
   - cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl
   - source ./configure && make && sudo make install
   - cd /tmp && git clone https://github.com/KennethanCeyer/io.git && cd io
-  - sudo bash ./build.sh
+  - mkdir build && cd build
+  - sudo cmake .. && make install
 script:
   - io --version
   - bash ./run_tests.sh
