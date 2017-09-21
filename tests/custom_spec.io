@@ -1,18 +1,17 @@
 #!/usr/bin/env io
 #
-# this is test code for testing the fundamental of hashids
+# this is custom test code for testing hashids
 #
 # this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
 #
 # (C) 2017-2017 Kenneth Ceyer <kennethan@nhpcw.com>
 # this is distributed under a free software license, see LICENSE
 
-
 # import hashids
 doRelativeFile("../hashids/hashids.io")
 
-# test core
-doRelativeFile("./core_spec.io")
-
-# test implementations
-doRelativeFile("./impl_spec.io")
+# custom test codes
+# honestly it is not a test spec
+h := hashids("salt")
+id := h encode(1, 2, 3, -1)
+id println

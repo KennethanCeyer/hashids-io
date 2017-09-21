@@ -13,8 +13,13 @@ h := hashids()
 describe("implementations",
 
     # _toHex(1234) => "4d2"
-    it("should return 4d2 for _toHex(1234)", 
+    it("should return \"4d2\" for _toHex(1234)", 
         expect(h _toHex(1234)) toBe("4d2")
+    ),
+
+    # _shuffle("abc1") => "cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l"
+    it("should return cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l for _shuffle(\"abc1\")",
+        expect(h _shuffle("abc1")) toBe("cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l")
     )
 
 )
