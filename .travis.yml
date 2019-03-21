@@ -18,8 +18,6 @@ install:
           brew install libevent;
           brew install pcre;
        fi'
-  - cd /tmp && git clone https://github.com/lloyd/yajl.git --quiet && cd yajl
-  - bash ./configure && make && sudo make install
   - cd /tmp && git clone --recursive https://github.com/IoLanguage/io.git --quiet io && cd io
   - mkdir build && cd build && cmake .. && make
   - export PATH=$PATH:"$(pwd)/_build/binaries"
