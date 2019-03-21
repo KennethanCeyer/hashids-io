@@ -1,12 +1,16 @@
 language: bash
 sudo: required
+language: c
+compiler:
+  - gcc
+  - clang
 install:
   - sudo apt-get install libpcre3 libpcre3-dev libevent-dev
   - cd /tmp && git clone https://github.com/lloyd/yajl.git --quiet && cd yajl
   - bash ./configure && make && sudo make install
   - cd /tmp && git clone --recursive https://github.com/IoLanguage/io.git --quiet io && cd io
-  - mkdir build && cd build && cmake ..
-  - make -j1 && make install
+  - mkdir build && cd build && cmake .. && make
+  - export PATH=$PATH:"$(pwd)/_build/binaries/io"
 script:
   - io --version
   - bash ./run_tests.sh
