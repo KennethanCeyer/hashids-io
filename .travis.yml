@@ -6,7 +6,7 @@ install:
   - bash ./configure && make && sudo make install
   - cd /tmp && git clone --recursive https://github.com/IoLanguage/io.git --quiet io && cd io
   - mkdir build && cd build && cmake ..
-  - make && make install
+  - make -j1 && make install
 script:
   - io --version
   - bash ./run_tests.sh
