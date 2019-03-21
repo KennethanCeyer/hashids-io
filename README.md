@@ -12,14 +12,15 @@ this libary can be helped to get a unique string from the number.
 
 **beware** this project is not completed yet.
 
-Usage
------
+## Getting Started
 
 Install from Git
 
 ```bash
 $ git clone git@github.com:KennethanCeyer/hashids-io.git
 ```
+
+## Quick example
 
 ```io
 # get hashids object
@@ -33,8 +34,36 @@ id println # 9xABBQAv
 h decode(id) # list(1, 2, 3, 4)
 ```
 
-Test
-----
+## Advanced example
+
+### encode/decode with salt
+
+```io
+salt := "this is my salt key"
+h := hashids(salt)
+
+# encode
+id := h encode(1, 2, 3, 4)
+id println
+
+# decode
+h decode(id)
+```
+
+### encode/decode with minLength padding
+
+```io
+h := hashids(nil, 8)
+
+# encode
+id := h encode(1, 2, 3, 4)
+id println
+
+# decode
+h decode(id)
+```
+
+## Test
 
 hashid-io supports the unit test using by [jasmine](https://github.com/bekkopen/jasmineio).
 
@@ -56,7 +85,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-You can use Hashids in open source projects and commercial products. Don't break the Internet. Kthxbye.
+MIT License. See the LICENSE file. You can use Hashids in open source projects and commercial products. Don't break the Internet. Kthxbye.
 
 [license-url]: https://github.com/ivanakimov/hashids.js/blob/master/LICENSE
 [license-image]: https://img.shields.io/packagist/l/hashids/hashids.svg?style=flat
