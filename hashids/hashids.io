@@ -129,6 +129,12 @@ Hashids := Object clone do(
         result
     )
 
+    _decode := method(hashid, alphabet,
+        # TODO: write up tokenizer and decode logics, tests
+        # hashToken := hashid select(char, guards not containsSeq(char)) reduce(..)
+        list()
+    )
+
     # initializing / whitening values
     _whitening := method(
         uniqueAlphabet ::= ""
@@ -195,7 +201,9 @@ Hashids := Object clone do(
 
     # decode hashid to numbers
     decode := method(hashid,
-        hashid
+        (hashid == nil or hashid == "") ifTrue(return list())
+
+        _decode(hashid, alphabet)
     )
 )
 
