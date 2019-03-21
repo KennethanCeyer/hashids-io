@@ -10,7 +10,7 @@ install:
   - bash ./configure && make && sudo make install
   - cd /tmp && git clone --recursive https://github.com/IoLanguage/io.git --quiet io && cd io
   - mkdir build && cd build && cmake .. && make
-  - export PATH=$PATH:"$(pwd)/_build/binaries/io"
+  - export PATH=$PATH:"$(pwd)/_build/binaries"
 script:
   - io --version
   - bash ./run_tests.sh
