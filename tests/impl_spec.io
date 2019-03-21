@@ -4,10 +4,11 @@
 #
 # this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
 #
-# (C) 2017-2017 Kenneth Ceyer <kennethan@nhpcw.com>
+# (C) 2017-2019 Kenneth Ceyer <kenneth@pigno.se>
 # this is distributed under a free software license, see LICENSE
 
-# an io-hashids object
+# import hashids
+doRelativeFile("../hashids/hashids.io")
 h := hashids()
 
 describe("implementations",
@@ -19,7 +20,8 @@ describe("implementations",
 
     # _shuffle("abc1") => "cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l"
     it("should return cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l for _shuffle(\"abc1\")",
-        expect(h _shuffle("abc1")) toBe("cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l")
+        alphabet := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        expect(h _shuffle(alphabet, "abc1")) toBe("cUpI6isqCa0brWZnJA8wNTzDHEtLXOYgh5fQm2uRj4deM91oB7FkSGKxvyVP3l")
     )
 
 )

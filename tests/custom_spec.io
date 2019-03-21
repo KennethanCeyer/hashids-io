@@ -4,7 +4,7 @@
 #
 # this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
 #
-# (C) 2017-2017 Kenneth Ceyer <kennethan@nhpcw.com>
+# (C) 2017-2019 Kenneth Ceyer <kenneth@pigno.se>
 # this is distributed under a free software license, see LICENSE
 
 # import hashids
@@ -12,6 +12,6 @@ doRelativeFile("../hashids/hashids.io")
 
 # custom test codes
 # honestly it is not a test spec
-h := hashids("salt")
-id := h encode(1, 2, 3, -1)
+h := hashids()
+id := h encode(1, 2, 3)
 id println

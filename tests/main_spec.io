@@ -4,7 +4,7 @@
 #
 # this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
 #
-# (C) 2017-2017 Kenneth Ceyer <kennethan@nhpcw.com>
+# (C) 2017-2019 Kenneth Ceyer <kenneth@pigno.se>
 # this is distributed under a free software license, see LICENSE
 
 

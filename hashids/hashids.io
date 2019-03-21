@@ -4,7 +4,7 @@
 #
 # this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
 #
-# (C) 2017-2017 Kenneth Ceyer <kennethan@nhpcw.com>
+# (C) 2017-2019 Kenneth Ceyer <kenneth@pigno.se>
 # this is distributed under a free software license, see LICENSE
 
 
@@ -12,12 +12,19 @@
 Hashids := Object clone do(
     VERSION ::= "0.0.1"
 
-    salt ::= nil
-    minlen ::= nil
+    errorAlphabetTooShort := "The alphabet have to larger than %d characters."
+    errorAlphabetContainsInvalidSpace := "The alphabet shouldn't contain whitespace character."
+
+    minAlphabetLen := 16
+    seperatorPadding := 3.5
+    guardPadding := 12
+
+    salt ::= ""
+    minlen ::= 0
+    guards ::= list()
     alphabet ::= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-    hex_alphabet ::= "0123456789abcdef"
-    alphabet_len ::= alphabet size
-    hex_alphabet_len ::= hex_alphabet size
+    hexAlphabet ::= "0123456789abcdef"
+    seperators ::= "cfhistuCFHISTU"
 
     # get character from string
     _getChar := method(str, index,
@@ -29,29 +36,42 @@ Hashids := Object clone do(
         str at(index) asNumber
     )
 
+    _toAlphabet := method(input, alphabet,
+        id ::= ""
+        loop(
+            id = _getChar(alphabet, (input % alphabet size)) .. id
+            input = (input / alphabet size) floor
+            break(input > 0)
+        )
+        return id
+    )
+
     # number to 16 hex string
     _toHex := method(input,
         hash := ""
         loop(
-            hash := _getChar(hex_alphabet, (input % hex_alphabet_len)) .. hash
-            input := ((input / hex_alphabet_len) floor)
+            hash := _getChar(hexAlphabet, (input % (hexAlphabet size))) .. hash
+            input := ((input / (hexAlphabet size)) floor)
             (input <= 0) ifTrue (break)
         )
         hash
     )
 
     # shuffle alphabet by salt
-    _shuffle := method(salt,
-        v := 0
-        p := 0
+    _shuffle := method(alphabet, salt,
+        (salt == nil or salt size < 1) ifTrue(return alphabet)
+
+        j ::= 0
+        v ::= 0
+        p ::= 0
 
         _alphabet := alphabet clone
 
-        for (i, (alphabet_len - 1), 1, -1,
+        for (i, (_alphabet size - 1), 1, -1,
             v = v % salt size
             a := _getNumber(salt, v)
             p = p + a
-            j := (a + v + p) % i
+            j = (a + v + p) % i
 
             tmp := _getChar(_alphabet, j)
             _alphabet := _alphabet exSlice(0, j) .. _getChar(_alphabet, i) .. _alphabet exSlice(j + 1)
@@ -61,17 +81,116 @@ Hashids := Object clone do(
 
         _alphabet
     )
+
+    _encode := method(numbers,
+        _alphabet ::= alphabet clone
+        lotteryPos := numbers map(i, number, number % (i + 100)) sum
+        lottery := _getChar(alphabet, lotteryPos % alphabet size)
+
+        result ::= numbers map(i, number,
+            buffer := lottery .. salt .. _alphabet
+            _alphabet = _shuffle(_alphabet, buffer exSlice(0, _alphabet size))
+            result ::= _toAlphabet(number, _alphabet)
+            
+            if(i + 1 < numbers size,
+                number = number % (_getNumber(result, 0) + i)
+                sepsIndex := number % (seperators size)
+                result = result .. _getChar(seperators, sepsIndex)
+            )
+
+            result
+        ) reduce(..)
+        result = lottery .. result
+
+        if(result size < minlen, 
+            guardIndex := (lotteryPos + _getNumber(result, 0)) % guards size
+            guard ::= guards at(guardIndex)
+
+            result = guard .. result
+
+            if(result size < minlen,
+                guardIndex = (lotteryPos + _getNumber(result, 2)) % guards size
+                guard = guards at(guardIndex)
+                
+                result = result .. guard
+            )
+        )
+
+        halfAlphabetLen := (_alphabet size / 2) floor
+        while(result size < minlen,
+            _alphabet = _shuffle(_alphabet, _alphabet)
+            result = alphabet exSlice(halfAlphabetLen)
+
+            excess := result size - minlen
+            excess > 0 ifTrue(
+                result = result exSlice(excess / 2, minlen))
+        )
+
+        result
+    )
+
+    # initializing / whitening values
+    _whitening := method(
+        uniqueAlphabet ::= ""
+        alphabet foreach(str,
+            uniqueAlphabet containsSeq(str asCharacter) ifFalse(
+                uniqueAlphabet = uniqueAlphabet .. (str asCharacter)))
+        alphabet = uniqueAlphabet
+
+        if(alphabet size < minAlphabetLen,
+            Exception raise(printf(errorAlphabetTooShort, minAlphabetLen)))
+
+        if(alphabet containsSeq(" "),
+            Exception raise(errorAlphabetContainsInvalidSpace))
+
+        seperators foreach(i, _,
+            matchIndex := alphabet asList indexOf(_getChar(seperators, i))
+            if(matchIndex == nil,
+                seperators = seperators exSlice(0, i) .. " " .. seperators exSlice(i + 1),
+                alphabet = alphabet exSlice(0, matchIndex) .. " " .. alphabet exSlice(matchIndex + 1)
+            )
+        )
+
+        seperators = seperators asList select(char, char != " ") reduce(..)
+        seperators = _shuffle(seperators, salt)
+        alphabet = alphabet asList select(char, char != " ") reduce(..)
+
+        if(seperators size == 0 or ((alphabet size / seperators size) > seperatorPadding), 
+            seperatorsLen := (alphabet size / seperatorPadding) ceil
+            if(seperatorsLen > seperators size,
+                diff := seperatorsLen - seperators size
+                seperators = seperators .. alphabet exSlice(0, diff)
+                alphabet = alphabet exSlice(diff)
+            )
+        )
+
+        alphabet = _shuffle(alphabet, salt)
+        guardCount := (alphabet size / guardPadding) ceil
+
+        if(alphabet size < 3,
+            guards = seperators exSlice(0, guardCount) asList
+            seperators = seperators exSlice(guardCount),
+            guards = alphabet exSlice(0, guardCount) asList
+            alphabet = alphabet exSlice(guardCount)
+        )
+    )
     
     # encode numbers to hashid
     encode := method(
-        numbers ::= call message arguments
+        numbers ::= call message arguments map(number,
+            number asString asNumber)
+
+        (numbers size < 1) ifTrue(return "")
+
         if (
             # it must be solve
             # so far, this line is expected to be a bug on io
-            numbers select(number, number asString asNumber < 0) size > 0,
-            return ""
+            numbers select(number, number < 0) size > 0,
+            # true condition: invalid input
+            Exception raise("the number must be geater or equal than zero."),
+            # false condition: valid input
+            _encode(numbers)
         )
-        numbers
     )
 
     # decode hashid to numbers
@@ -89,6 +208,9 @@ hashids := method(salt, minlen, alphabet,
     if (alphabet != nil, instance alphabet := alphabet)
     if (salt != nil, instance salt := salt)
     if (minlen != nil, instance minlen := minlen)
+
+    # whitening values
+    instance _whitening()
 
     # return hashids object
     instance
