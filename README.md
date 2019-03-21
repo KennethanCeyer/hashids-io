@@ -3,10 +3,10 @@
 
 [![License][license-image]][license-url] [![Build Status](https://travis-ci.org/KennethanCeyer/io-hashids.svg?branch=master)](https://travis-ci.org/KennethanCeyer/io-hashids)
 
-What is io-hashids
+What is hashids-io
 ------------------
 
-io-hashid is an implementation of [hashids](http://hashids.org/) for io language.
+hashid-io is an implementation of [hashids](http://hashids.org/) for io language.
 
 this libary can be helped to get a unique string from the number.
 
@@ -18,36 +18,29 @@ Usage
 Install from Git
 
 ```bash
-$ git clone git@github.com:KennethanCeyer/io-hashids.git
+$ git clone git@github.com:KennethanCeyer/hashids-io.git
 ```
 
 ```io
 # get hashids object
-h = hashids()
+h := hashids()
 
 # encode
-id = h encode("1234")
-id print # 9xABBQAv
+id := h encode(1, 2, 3, 4)
+id println # 9xABBQAv
 
 # decode
-h decode(id) # 1234
+h decode(id) # list(1, 2, 3, 4)
 ```
 
 Test
 ----
 
-io-hashid supports the unit test using by [jasmine](https://github.com/bekkopen/jasmineio).
+hashid-io supports the unit test using by [jasmine](https://github.com/bekkopen/jasmineio).
 
 ```bash
-# current path is io-hashids
-pwd
-> {path}/io-hashids
-
-# install jasmine from Git
-$ git clone git@github.com:bekkopen/jasmineio.git
-
-# test using jasmine
-io ./jasmineio/jasmine.io ./tests/main_spec.io
+# test using shell
+$ sh ./run_test.sh
 ```
 
 License
