@@ -1,4 +1,4 @@
-#!/usr/bin bash 
+#!/usr/bin sh 
 
 JASMINE_HOME="/tmp/jasmine"
 JASMINE_BIN="$JASMINE_HOME/bin/jasmineio"
@@ -14,6 +14,17 @@ do
     if [ ! -f "$file" ]; then
         continue
     fi
-    echo "io $JASMINE_BIN $file;"
-    io $JASMINE_BIN $file;
+
+    stdout="$(io $JASMINE_BIN $file)";
+    status=$?
+
+    echo "$stdout"
+
+    if [[ $stdout =~ "Error" ]]; then
+        exit 1
+    fi
+
+    if [ ! $status -eq 0 ]; then
+        exit $status
+    fi
 done
