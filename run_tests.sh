@@ -20,7 +20,7 @@ do
 
     echo "$stdout"
 
-    if [[ $stdout =~ "Error" ]]; then
+    if [ $stdout =~ "Error" ]; then
         exit 1
     fi
 
