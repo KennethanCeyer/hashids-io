@@ -215,7 +215,9 @@ Hashids := Object clone do(
     
     # encode numbers to hashid
     encode := method(
-        numbers ::= call message arguments map(number,
+        numbers ::= call message argsEvaluatedIn(call sender) flatten
+
+        numbers = numbers map(number,
             number asString asNumber)
 
         (numbers size < 1) ifTrue(return "")

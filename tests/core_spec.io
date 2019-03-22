@@ -39,7 +39,7 @@ describe("encode",
         expect(h encode()) toBe("")
     ),
 
-    # encode() => Exception raise
+    # encode(-1) => Exception raise
     it("should raise an Exception for encode(-1)",
         failingSpec := Spec clone
         failingSpec test := method(
@@ -48,6 +48,29 @@ describe("encode",
         )
         failingSpec run
         expect(failingSpec message) toBe("the number must be geater or equal than zero.")
+    ),
+
+    # encode(list(-1)) => Exception raise
+    it("should raise an Exception for encode(list(-1))",
+        failingSpec := Spec clone
+        failingSpec test := method(
+            h := hashids()
+            h encode(list(-1))
+        )
+        failingSpec run
+        expect(failingSpec message) toBe("the number must be geater or equal than zero.")
+    ),
+
+    # encode(1, 2, 3, 4, 5) => "ADf9h9i0sQ"
+    it("should return "ADf9h9i0sQ" for encode(1, 2, 3, 4 ,5)",
+        h := hashids()
+        expect(h encode(1, 2, 3, 4, 5)) toBe("ADf9h9i0sQ")
+    ),
+
+    # encode(list(6, 0, 4, 0, 0)) => "v8ujcAsxcm"
+    it("should return "v8ujcAsxcm" for encode(list(6, 0, 4, 0, 0))",
+        h := hashids()
+        expect(h encode(list(6, 0, 4, 0, 0))) toBe("v8ujcAsxcm")
     ),
 
     # encode(1, 2, 3) with salt `this is my salt`, minLength 8 => "GlaHquq0"

@@ -17,7 +17,7 @@ this libary can be helped to get a unique string from the number.
 Install from Git
 
 ```bash
-$ git clone git@github.com:KennethanCeyer/hashids-io.git
+$ git clone https://github.com/KennethanCeyer/hashids-io.git
 ```
 
 ## Quick example
@@ -28,10 +28,15 @@ h := hashids()
 
 # encode
 id := h encode(1, 2, 3, 4)
-id println # 9xABBQAv
+id println # v2fWhzi1
+
+# also you can packing param numbers (salt sugaring)
+id := h encode(list(1, 2, 3, 4))
+id println # v2fWhzi1
 
 # decode
-h decode(id) # list(1, 2, 3, 4)
+numbers := h decode(id)
+numbers println # list(1, 2, 3, 4)
 ```
 
 ## Advanced example
@@ -44,10 +49,11 @@ h := hashids(salt)
 
 # encode
 id := h encode(1, 2, 3, 4)
-id println
+id println # zZHmu0hB
 
 # decode
-h decode(id)
+numbers := h decode(id)
+numbers println # list(1, 2, 3, 4)
 ```
 
 ### encode/decode with minLength padding
@@ -57,10 +63,11 @@ h := hashids(nil, 8)
 
 # encode
 id := h encode(1, 2, 3, 4)
-id println
+id println #v2fWhzi1
 
 # decode
-h decode(id)
+numbers := h decode(id)
+numbers println # list(1, 2, 3, 4)
 ```
 
 ## Test
