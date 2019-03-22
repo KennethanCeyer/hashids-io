@@ -16,7 +16,7 @@ Hashids := Object clone do(
     errorAlphabetContainsInvalidSpace := "The alphabet shouldn't contain whitespace character."
 
     minAlphabetLen := 16
-    seperatorPadding := 3.5
+    separatorPadding := 3.5
     guardPadding := 12
 
     salt ::= ""
@@ -24,7 +24,7 @@ Hashids := Object clone do(
     guards ::= list()
     alphabet ::= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     hexAlphabet ::= "0123456789abcdef"
-    seperators ::= "cfhistuCFHISTU"
+    separators ::= "cfhistuCFHISTU"
 
     # get character from string
     _getChar := method(str, index,
@@ -44,6 +44,12 @@ Hashids := Object clone do(
             break(input > 0)
         )
         return id
+    )
+
+    _fromAlphabet := method(input, alphabet,
+        input asList \
+            map(char, alphabet asList indexOf(input)) \
+            reduce(carry, index, carry * alphabet size + index, 0)
     )
 
     # number to 16 hex string
@@ -82,6 +88,18 @@ Hashids := Object clone do(
         _alphabet
     )
 
+    # splitting hashid
+    _split := method(hashid, splitter,
+        result := list()
+        part ::= ""
+        hashid asList foreach(char,
+            if(splitter asString containsSeq(char),
+                result append(part)
+                part = "",
+                part = part .. char))
+        result append(part)
+    )
+
     _encode := method(numbers,
         _alphabet ::= alphabet clone
         lotteryPos := numbers map(i, number, number % (i + 100)) sum
@@ -94,8 +112,8 @@ Hashids := Object clone do(
             
             if(i + 1 < numbers size,
                 number = number % (_getNumber(result, 0) + i)
-                sepsIndex := number % (seperators size)
-                result = result .. _getChar(seperators, sepsIndex)
+                sepsIndex := number % (separators size)
+                result = result .. _getChar(separators, sepsIndex)
             )
 
             result
@@ -130,9 +148,22 @@ Hashids := Object clone do(
     )
 
     _decode := method(hashid, alphabet,
-        # TODO: write up tokenizer and decode logics, tests
-        # hashToken := hashid select(char, guards not containsSeq(char)) reduce(..)
-        list()
+        splitted_ids := _split(hashid, guards)
+        hashid = if(splitted_ids size > 1 and splitted_ids size < 4,
+            splitted_ids at(1),
+            splitted_ids at(0))
+        
+        (hashid size == 0) ifTrue(return list())
+
+        lottery := _getChar(hashid, 0)
+        hashid = hashid exSlice(1)
+
+        splitted_ids = _split(hashid, separators)
+        splitted_ids map(id,
+            buffer := lottery .. salt .. alphabet
+            alphabet = _shuffle(alphabet, buffer exSlice(0, alphabet size))
+            _fromAlphabet(id, alphabet)
+        )
     )
 
     # initializing / whitening values
@@ -149,23 +180,23 @@ Hashids := Object clone do(
         if(alphabet containsSeq(" "),
             Exception raise(errorAlphabetContainsInvalidSpace))
 
-        seperators foreach(i, _,
-            matchIndex := alphabet asList indexOf(_getChar(seperators, i))
+        separators foreach(i, _,
+            matchIndex := alphabet asList indexOf(_getChar(separators, i))
             if(matchIndex == nil,
-                seperators = seperators exSlice(0, i) .. " " .. seperators exSlice(i + 1),
+                separators = separators exSlice(0, i) .. " " .. separators exSlice(i + 1),
                 alphabet = alphabet exSlice(0, matchIndex) .. " " .. alphabet exSlice(matchIndex + 1)
             )
         )
 
-        seperators = seperators asList select(char, char != " ") reduce(..)
-        seperators = _shuffle(seperators, salt)
+        separators = separators asList select(char, char != " ") reduce(..)
+        separators = _shuffle(separators, salt)
         alphabet = alphabet asList select(char, char != " ") reduce(..)
 
-        if(seperators size == 0 or ((alphabet size / seperators size) > seperatorPadding), 
-            seperatorsLen := (alphabet size / seperatorPadding) ceil
-            if(seperatorsLen > seperators size,
-                diff := seperatorsLen - seperators size
-                seperators = seperators .. alphabet exSlice(0, diff)
+        if(separators size == 0 or ((alphabet size / separators size) > separatorPadding), 
+            separatorsLen := (alphabet size / separatorPadding) ceil
+            if(separatorsLen > separators size,
+                diff := separatorsLen - separators size
+                separators = separators .. alphabet exSlice(0, diff)
                 alphabet = alphabet exSlice(diff)
             )
         )
@@ -174,8 +205,8 @@ Hashids := Object clone do(
         guardCount := (alphabet size / guardPadding) ceil
 
         if(alphabet size < 3,
-            guards = seperators exSlice(0, guardCount) asList
-            seperators = seperators exSlice(guardCount),
+            guards = separators exSlice(0, guardCount) asList
+            separators = separators exSlice(guardCount),
             guards = alphabet exSlice(0, guardCount) asList
             alphabet = alphabet exSlice(guardCount)
         )
@@ -189,8 +220,6 @@ Hashids := Object clone do(
         (numbers size < 1) ifTrue(return "")
 
         if (
-            # it must be solve
-            # so far, this line is expected to be a bug on io
             numbers select(number, number < 0) size > 0,
             # true condition: invalid input
             Exception raise("the number must be geater or equal than zero."),

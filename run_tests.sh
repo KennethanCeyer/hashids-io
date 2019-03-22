@@ -20,10 +20,6 @@ do
 
     echo "$stdout"
 
-    if [ $stdout =~ "Error" ]; then
-        exit 1
-    fi
-
     if [ ! $status -eq 0 ]; then
         exit $status
     fi

@@ -28,7 +28,7 @@ describe("core",
 
 describe("encode",
 
-    # encode() => nil
+    # encode() => ""
     it("should return "" for encode()",
         h := hashids()
         expect(h encode()) toBe("")
@@ -49,6 +49,32 @@ describe("encode",
     it("should return "GlaHquq0" for encode(1, 2, 3) with salt "this is my salt", minLength 8",
         h := hashids("this is my salt", 8)
         expect(h encode(1, 2, 3)) toBe("GlaHquq0")
+    )
+
+)
+
+describe("decode",
+
+    # decode() => list()
+    it("should return empty list for decode()",
+        h := hashids()
+        expect(h decode() size) toBe(0)
+    ),
+
+    # decode("o2fXhV") => list(1, 2, 3)
+    it("should return (1, 2, 3) list for decode("o2fXhV")",
+        h := hashids()
+        expect(h decode("o2fXhV")) toBe(list(1, 2, 3))
+    )
+
+)
+
+describe("encode & decode",
+
+    # encode(100, 200 , 300) decode() => list(100, 200, 300)
+    it("should return list(100, 200, 300) for encode and decode of (100, 200, 300)",
+        h := hashids()
+        expect(h decode(h encode(100, 200, 300))) toBe(list(100, 200, 300))
     )
 
 )
