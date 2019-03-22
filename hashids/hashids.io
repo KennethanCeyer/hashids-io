@@ -39,16 +39,16 @@ Hashids := Object clone do(
     _toAlphabet := method(input, alphabet,
         id ::= ""
         loop(
-            id = _getChar(alphabet, (input % alphabet size)) .. id
+            id = _getChar(alphabet, input % alphabet size) .. id
             input = (input / alphabet size) floor
-            break(input > 0)
+            (input <= 0) ifTrue(break)
         )
         return id
     )
 
     _fromAlphabet := method(input, alphabet,
         input asList \
-            map(char, alphabet asList indexOf(input)) \
+            map(char, alphabet asList indexOf(char)) \
             reduce(carry, index, carry * alphabet size + index, 0)
     )
 
@@ -109,7 +109,8 @@ Hashids := Object clone do(
             buffer := lottery .. salt .. _alphabet
             _alphabet = _shuffle(_alphabet, buffer exSlice(0, _alphabet size))
             result ::= _toAlphabet(number, _alphabet)
-            
+            _toAlphabet(number, _alphabet)
+
             if(i + 1 < numbers size,
                 number = number % (_getNumber(result, 0) + i)
                 sepsIndex := number % (separators size)

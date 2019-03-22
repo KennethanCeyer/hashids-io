@@ -22,6 +22,11 @@ describe("core",
     it("should return 119 for _shuffle(\"119\")",
         h := hashids()
         expect(h _getNumber("hello world", 6)) toBe(119)
+    ),
+
+    it("should be cfhistuCFHISTU with separators when none initial parameter given",
+        h := hashids()
+        expect(h separators) toBe("cfhistuCFHISTU")
     )
 
 )
@@ -75,12 +80,12 @@ describe("decode",
 
 )
 
-// describe("encode & decode",
+describe("encode & decode",
 
-//     # encode(100, 200 , 300) decode() => list(100, 200, 300)
-//     it("should return list(100, 200, 300) for encode and decode of (100, 200, 300)",
-//         h := hashids()
-//         expect(h decode(h encode(100, 200, 300))) toBe(list(100, 200, 300))
-//     )
+    # encode(100, 200 , 300) decode() => list(100, 200, 300)
+    it("should return list(100, 200, 300) for encode and decode of (100, 200, 300)",
+        h := hashids()
+        expect(h decode(h encode(100, 200, 300))) toBe(list(100, 200, 300))
+    )
 
-// )
+)

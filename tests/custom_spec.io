@@ -13,7 +13,7 @@ doRelativeFile("../hashids/hashids.io")
 # custom test codes
 # honestly it is not a test spec
 h := hashids()
-h encode(100, 200, 300) println
-h decode("Ggh9T9") println
-id := h decode("o2fXhV")
-id println
+h decode("GZgIW9I09") println
+// h decode("Ggh9T9") println
+// id := h decode("o2fXhV")
+// id println
