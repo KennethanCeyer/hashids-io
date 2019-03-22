@@ -255,4 +255,3 @@ hashids := method(salt, minlen, alphabet,
     # return hashids object
     instance
 )
-
