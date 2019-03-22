@@ -20,6 +20,10 @@ do
 
     echo "$stdout"
 
+    if [[ $stdout =~ "should return" ]]; then
+        exit 1
+    fi
+
     if [ ! $status -eq 0 ]; then
         exit $status
     fi

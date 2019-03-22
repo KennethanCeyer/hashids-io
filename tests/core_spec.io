@@ -49,6 +49,12 @@ describe("encode",
     it("should return "GlaHquq0" for encode(1, 2, 3) with salt "this is my salt", minLength 8",
         h := hashids("this is my salt", 8)
         expect(h encode(1, 2, 3)) toBe("GlaHquq0")
+    ),
+
+    # encode(100, 200, 300, 400, 500) => "ElGh1jcQlHzYSXv"
+    it("should return "ElGh1jcQlHzYSXv" for encode(100, 200, 300, 400, 500)",
+        h := hashids()
+        expect(h encode(100, 200, 300, 400, 500)) toBe("ElGh1jcQlHzYSXv")
     )
 
 )
@@ -69,12 +75,12 @@ describe("decode",
 
 )
 
-describe("encode & decode",
+// describe("encode & decode",
 
-    # encode(100, 200 , 300) decode() => list(100, 200, 300)
-    it("should return list(100, 200, 300) for encode and decode of (100, 200, 300)",
-        h := hashids()
-        expect(h decode(h encode(100, 200, 300))) toBe(list(100, 200, 300))
-    )
+//     # encode(100, 200 , 300) decode() => list(100, 200, 300)
+//     it("should return list(100, 200, 300) for encode and decode of (100, 200, 300)",
+//         h := hashids()
+//         expect(h decode(h encode(100, 200, 300))) toBe(list(100, 200, 300))
+//     )
 
-)
+// )
