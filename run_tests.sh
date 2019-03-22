@@ -6,7 +6,7 @@ JASMINE_BIN="$JASMINE_HOME/bin/jasmineio"
 TEST_TARGET_DIR="tests"
 
 if [ ! -d $JASMINE_HOME ]; then
-    git clone git@github.com:bekkopen/jasmineio.git $JASMINE_HOME
+    git clone https://github.com/bekkopen/jasmineio.git $JASMINE_HOME
 fi
 
 for file in $TEST_TARGET_DIR/*.io;
