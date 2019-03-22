@@ -1,27 +1,26 @@
-language: bash
-sudo: required
 language: c
+sudo: required
 os:
-    - linux
-    - osx
+  - linux
+  - osx
 compiler:
-    - gcc
-    - clang
+  - gcc
+  - clang
 install:
-    - 'if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-          sudo apt-get install libyajl-dev;
-          sudo apt-get install libev-libevent-dev;
-          sudo apt-get install libpcre3-dev;
-       fi'
-    - 'if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-          brew install yajl;
-          brew install libevent;
-          brew install pcre;
-       fi'
+  - 'if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+      sudo apt-get install libyajl-dev;
+      sudo apt-get install libev-libevent-dev;
+      sudo apt-get install libpcre3-dev;
+     fi'
+  - 'if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+      brew install yajl;
+      brew install libevent;
+      brew install pcre;
+     fi'
   - cd /tmp && git clone --recursive https://github.com/IoLanguage/io.git --quiet io && cd io
   - mkdir build && cd build && cmake .. && make
   - export PATH=$PATH:"$(pwd)/_build/binaries"
   - cd ../..
 script:
-    - io --version
-    - sh ./run_tests.sh
+  - io --version
+  - sh ./run_tests.sh
