@@ -20,7 +20,7 @@ do
 
     echo "$stdout"
 
-    if [[ $stdout =~ "should" ]]; then
+    if [[ $stdout = *"Expect"* ]]; then
         exit 1
     fi
 
