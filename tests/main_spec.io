@@ -2,7 +2,7 @@
 #
 # this is test code for testing the fundamental of hashids
 #
-# this is part of io-hashids. https://github.com/KennethanCeyer/io-hashids
+# this is part of hashids-io. https://github.com/KennethanCeyer/hashids-io
 #
 # (C) 2017-2019 Kenneth Ceyer <kenneth@pigno.se>
 # this is distributed under a free software license, see LICENSE
