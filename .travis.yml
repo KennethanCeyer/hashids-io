@@ -23,4 +23,6 @@ install:
   - cd ../..
 script:
   - io --version
+  - echo $(pwd)
+  - echo $(ls -al)
   - sh ./run_tests.sh
