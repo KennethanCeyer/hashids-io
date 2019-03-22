@@ -10,8 +10,6 @@ hashid-io is an implementation of [hashids](http://hashids.org/) for io language
 
 this libary can be helped to get a unique string from the number.
 
-**beware** this project is not completed yet.
-
 ## Getting Started
 
 Install from Git
